@@ -5,7 +5,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.codeitsolo.scribbledash.App
 
 @Composable
-@Preview
+@Preview(showSystemUi = true)
 fun AppPreview() {
     App()
 }

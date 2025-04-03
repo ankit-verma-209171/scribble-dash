@@ -26,8 +26,6 @@ val onErrorContainer = Color(0xFF410002)
 
 val success = Color(0xFF0DD280)
 val onSuccess = Color(0xFFFFFFFF)
-val successContainer = Color(0xFFB2F2D6)
-val onSuccessContainer = Color(0xFF00321B)
 
 // Background & Surface
 val background = Color(0xFFFEFAF6)

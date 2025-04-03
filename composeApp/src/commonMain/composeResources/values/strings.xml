@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<resources>
+    <string name="scribble_dash">Scribble Dash</string>
+    <string name="home_title">Start drawing!</string>
+    <string name="home_sub_title">Select game mode</string>
+    <string name="one_round_wonder">One Round Wonder</string>
+</resources>
