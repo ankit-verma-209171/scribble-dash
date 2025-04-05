@@ -1,4 +1,4 @@
-package com.codeitsolo.scribbledash
+package com.codeitsolo.scribbledash.app
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -27,6 +27,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEach
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.codeitsolo.scribbledash.ui.theme.AppTheme
 import com.codeitsolo.scribbledash.ui.theme.color.onBackgroundVariant
 import com.codeitsolo.scribbledash.ui.theme.color.success
@@ -51,40 +54,54 @@ enum class ScribbleDashTab(val icon: DrawableResource) {
 @Composable
 fun App() {
     AppTheme {
-        Scaffold(
-            topBar = {
-                HomeTopAppBar()
-            },
-            bottomBar = {
-                ScribbleBottomAppBar(
-                    selectedTab = ScribbleDashTab.Home,
-                    onTabClick = {}
-                )
+        val navController = rememberNavController()
+        NavHost(
+            startDestination = Home,
+            navController = navController
+        ) {
+
+            composable<Home> {
+                Home()
             }
-        ) { innerPadding ->
-            Column(
+        }
+    }
+}
+
+@Composable
+internal fun Home() {
+    Scaffold(
+        topBar = {
+            HomeTopAppBar()
+        },
+        bottomBar = {
+            ScribbleBottomAppBar(
+                selectedTab = ScribbleDashTab.Home,
+                onTabClick = {}
+            )
+        }
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .padding(innerPadding)
+                .fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Heading(
                 modifier = Modifier
-                    .padding(innerPadding)
-                    .fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Heading(
-                    modifier = Modifier
-                        .padding(top = 83.dp)
-                )
-                GameModeCard(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(
-                            start = 16.dp,
-                            top = 20.dp,
-                            end = 16.dp
-                        ),
-                    mode = stringResource(Res.string.one_round_wonder),
-                    icon = Res.drawable.one_round_wonder,
-                    onClick = {}
-                )
-            }
+                    .padding(top = 83.dp)
+            )
+            GameModeCard(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        start = 16.dp,
+                        top = 20.dp,
+                        end = 16.dp
+                    ),
+                mode = stringResource(Res.string.one_round_wonder),
+                icon = Res.drawable.one_round_wonder,
+                onClick = {}
+            )
         }
     }
 }
