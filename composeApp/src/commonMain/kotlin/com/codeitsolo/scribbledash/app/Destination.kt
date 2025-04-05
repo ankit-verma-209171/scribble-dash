@@ -3,4 +3,7 @@ package com.codeitsolo.scribbledash.app
 import kotlinx.serialization.Serializable
 
 @Serializable
-data object Home
+sealed interface Destination
+
+@Serializable
+data object Dashboard : Destination
