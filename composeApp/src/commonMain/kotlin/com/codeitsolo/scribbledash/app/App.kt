@@ -3,9 +3,11 @@ package com.codeitsolo.scribbledash.app
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.codeitsolo.scribbledash.core.presentation.compose.FlowObservableEffect
 import com.codeitsolo.scribbledash.feature.dashboard.presentation.DashboardRoute
+import com.codeitsolo.scribbledash.feature.game.presentation.start.StartGameRoute
 import com.codeitsolo.scribbledash.ui.theme.AppTheme
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -26,6 +28,20 @@ fun App() {
 
             composable<Dashboard> {
                 DashboardRoute()
+            }
+
+            navigation<GameRoute>(
+                startDestination = StartGame,
+            ) {
+                composable<StartGame> {
+                    StartGameRoute()
+                }
+
+                composable<Game>(
+                    typeMap = Game.typeMap
+                ) {
+                    // GameRoute()
+                }
             }
         }
     }

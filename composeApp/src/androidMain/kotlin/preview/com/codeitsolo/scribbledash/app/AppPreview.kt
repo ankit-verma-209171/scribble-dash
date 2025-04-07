@@ -1,4 +1,4 @@
-package preview.com.codeitsolo.scribbledash
+package preview.com.codeitsolo.scribbledash.app
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview

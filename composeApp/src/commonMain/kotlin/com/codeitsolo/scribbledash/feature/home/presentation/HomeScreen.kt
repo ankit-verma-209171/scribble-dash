@@ -29,6 +29,7 @@ import com.codeitsolo.scribbledash.ui.theme.color.surfaceHigh
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 import scribbledash.composeapp.generated.resources.Res
 import scribbledash.composeapp.generated.resources.home_sub_title
 import scribbledash.composeapp.generated.resources.home_title
@@ -36,17 +37,20 @@ import scribbledash.composeapp.generated.resources.one_round_wonder
 import scribbledash.composeapp.generated.resources.scribble_dash
 
 @Composable
-fun HomeRoute(
-    modifier: Modifier = Modifier
+internal fun HomeRoute(
+    modifier: Modifier = Modifier,
+    viewModel: HomeViewModel = koinViewModel(),
 ) {
     HomeScreen(
-        modifier = modifier
+        modifier = modifier,
+        onOneRoundWonderClick = viewModel::onOneRoundWonderClick,
     )
 }
 
 @Composable
 private fun HomeScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onOneRoundWonderClick: () -> Unit,
 ) {
     Scaffold(
         modifier = modifier
@@ -75,7 +79,7 @@ private fun HomeScreen(
                     ),
                 mode = stringResource(Res.string.one_round_wonder),
                 icon = Res.drawable.one_round_wonder,
-                onClick = {}
+                onClick = onOneRoundWonderClick,
             )
         }
     }

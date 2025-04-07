@@ -25,7 +25,7 @@ import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun DashboardRoute(
+internal fun DashboardRoute(
     modifier: Modifier = Modifier,
     viewModel: DashboardViewModel = koinViewModel<DashboardViewModel>()
 ) {
@@ -39,7 +39,7 @@ fun DashboardRoute(
 }
 
 @Composable
-fun DashboardScreen(
+private fun DashboardScreen(
     modifier: Modifier = Modifier,
     uiState: DashboardUiState,
     onTabClick: (DashboardTab) -> Unit,
