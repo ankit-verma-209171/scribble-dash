@@ -21,7 +21,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.DefaultShadowColor
 import androidx.compose.ui.unit.dp
 import com.codeitsolo.scribbledash.ui.theme.color.onBackgroundVariant
 import com.codeitsolo.scribbledash.ui.theme.color.success
@@ -135,6 +137,12 @@ private fun GameModeCard(
 ) {
     Box(
         modifier = modifier
+            .shadow(
+                elevation = 4.dp,
+                shape = RoundedCornerShape(24.dp),
+                ambientColor = DefaultShadowColor.copy(alpha = 0.3f),
+                spotColor = DefaultShadowColor.copy(alpha = 0.2f),
+            )
             .clip(RoundedCornerShape(24.dp))
             .clickable(onClick = onClick)
             .background(MaterialTheme.colorScheme.success)

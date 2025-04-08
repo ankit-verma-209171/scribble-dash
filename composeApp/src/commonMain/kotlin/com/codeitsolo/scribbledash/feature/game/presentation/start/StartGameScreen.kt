@@ -11,13 +11,14 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.DefaultShadowColor
 import androidx.compose.ui.unit.dp
 import com.codeitsolo.scribbledash.feature.game.data.GameDifficulty
 import com.codeitsolo.scribbledash.feature.game.presentation.common.GameTopAppBar
@@ -134,23 +135,21 @@ private fun DifficultySetting(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Surface(
+        Icon(
             modifier = Modifier
+                .size(88.dp)
+                .shadow(
+                    elevation = 4.dp,
+                    shape = CircleShape,
+                    ambientColor = DefaultShadowColor.copy(alpha = 0.3f),
+                    spotColor = DefaultShadowColor.copy(alpha = 0.2f),
+                )
                 .clip(CircleShape)
                 .clickable(onClick = onClick),
-            contentColor = Color.Transparent,
-            shape = CircleShape,
-            tonalElevation = 8.dp,
-            shadowElevation = 8.dp,
-        ) {
-            Icon(
-                modifier = Modifier
-                    .size(88.dp),
-                painter = painterResource(icon),
-                contentDescription = "beginner difficulty",
-                tint = Color.Unspecified,
-            )
-        }
+            painter = painterResource(icon),
+            contentDescription = "beginner difficulty",
+            tint = Color.Unspecified,
+        )
         Text(
             modifier = Modifier
                 .padding(top = 12.dp)
