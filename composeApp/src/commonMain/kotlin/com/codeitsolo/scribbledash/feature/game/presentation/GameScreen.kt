@@ -1,8 +1,10 @@
 package com.codeitsolo.scribbledash.feature.game.presentation
 
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,12 +24,22 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.DefaultShadowColor
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.StrokeJoin
+import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.util.fastForEach
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.codeitsolo.scribbledash.feature.game.presentation.common.GameTopAppBar
 import com.codeitsolo.scribbledash.ui.theme.color.success
@@ -43,6 +55,7 @@ import scribbledash.composeapp.generated.resources.game_title
 import scribbledash.composeapp.generated.resources.ic_redo
 import scribbledash.composeapp.generated.resources.ic_undo
 import scribbledash.composeapp.generated.resources.img_board
+import kotlin.math.abs
 
 @Composable
 fun GameRoute(
@@ -58,6 +71,7 @@ fun GameRoute(
         onUndoClick = viewModel::onUndoClick,
         onRedoClick = viewModel::onRedoClick,
         onClearCanvasClick = viewModel::onClearCanvasClick,
+        onDrawingAction = viewModel::onDrawingAction
     )
 }
 
@@ -69,6 +83,7 @@ internal fun GameScreen(
     onUndoClick: () -> Unit,
     onRedoClick: () -> Unit,
     onClearCanvasClick: () -> Unit,
+    onDrawingAction: (DrawingAction) -> Unit
 ) {
     Scaffold(
         modifier = modifier,
@@ -92,7 +107,10 @@ internal fun GameScreen(
             )
             Board(
                 modifier = Modifier
-                    .padding(horizontal = 29.dp, vertical = 32.dp)
+                    .padding(horizontal = 29.dp, vertical = 32.dp),
+                paths = uiState.paths,
+                currentPath = uiState.currentPath,
+                onAction = onDrawingAction,
             )
             Spacer(
                 Modifier
@@ -134,6 +152,9 @@ internal fun GameScreen(
 @Composable
 private fun Board(
     modifier: Modifier,
+    paths: List<PathData>,
+    currentPath: PathData?,
+    onAction: (DrawingAction) -> Unit,
 ) {
     Box(
         modifier = modifier
@@ -148,7 +169,78 @@ private fun Board(
             painter = painterResource(Res.drawable.img_board),
             contentDescription = null
         )
+        Canvas(
+            modifier = Modifier
+                .clipToBounds()
+                .matchParentSize()
+                .pointerInput(true) {
+                    detectDragGestures(
+                        onDragStart = {
+                            onAction(DrawingAction.OnNewPathStart)
+                        },
+                        onDragEnd = {
+                            onAction(DrawingAction.OnPathEnd)
+                        },
+                        onDrag = { change, _ ->
+                            onAction(DrawingAction.OnDraw(change.position))
+                        },
+                        onDragCancel = {
+                            onAction(DrawingAction.OnPathEnd)
+                        },
+                    )
+                }
+        ) {
+            paths.fastForEach { pathData ->
+                drawPath(
+                    path = pathData.path,
+                    color = Color.Black,
+                )
+            }
+            currentPath?.let {
+                drawPath(
+                    path = it.path,
+                    color = Color.Black
+                )
+            }
+        }
     }
+}
+
+private fun DrawScope.drawPath(
+    path: List<Offset>,
+    color: Color,
+    thickness: Float = 10f
+) {
+    val smoothedPath = Path().apply {
+        if (path.isNotEmpty()) {
+            moveTo(path.first().x, path.first().y)
+
+            val smoothness = 5
+            for (i in 1..path.lastIndex) {
+                val from = path[i - 1]
+                val to = path[i]
+                val dx = abs(from.x - to.x)
+                val dy = abs(from.y - to.y)
+                if (dx >= smoothness || dy >= smoothness) {
+                    quadraticTo(
+                        x1 = (from.x + to.x) / 2f,
+                        y1 = (from.y + to.y) / 2f,
+                        x2 = to.x,
+                        y2 = to.y
+                    )
+                }
+            }
+        }
+    }
+    drawPath(
+        path = smoothedPath,
+        color = color,
+        style = Stroke(
+            width = thickness,
+            cap = StrokeCap.Round,
+            join = StrokeJoin.Round
+        )
+    )
 }
 
 @Composable
